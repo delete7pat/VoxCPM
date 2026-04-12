@@ -23,13 +23,14 @@ class VoxCPMDemo:
         self.asr_model: Optional[AutoModel] = AutoModel(
             model=self.asr_model_id,
             disable_update=True,
-            log_level='WARNING',  # changed from DEBUG to reduce noisy logs
+            log_level='ERROR',  # bumped from WARNING to ERROR - tired of seeing warnings on every run
             device="cuda:0" if self.device == "cuda" else "cpu",
         )
 
         # TTS model (lazy init)
         self.voxcpm_model: Optional[voxcpm.VoxCPM] = None
         # Note: change this path if you store models elsewhere locally
+        # I keep my models in ~/ml-models symlinked here, adjust as needed
         self.default_local_model_dir = "./models/VoxCPM1.5"
 
     # ---------- Model helpers ----------
@@ -72,5 +73,4 @@ class VoxCPMDemo:
     def prompt_wav_recognition(self, prompt_wav: Optional[str]) -> str:
         if prompt_wav is None:
             return ""
-        res = self.asr_model.generate(input=prompt_wav, language="auto", use_itn=True)
-        text = res[0]["text"].split('|>')[-1
+        res = s
