@@ -70,7 +70,7 @@ def validate_audio_file(filepath: str) -> None:
 
 def normalize_audio(
     audio: np.ndarray,
-    target_peak: float = 0.9,
+    target_peak: float = 0.95,  # bumped from 0.9 -- 0.9 was leaving output a bit quiet
 ) -> np.ndarray:
     """
     Normalize audio waveform so the peak absolute value equals `target_peak`.
@@ -106,15 +106,6 @@ def pad_or_trim(
     """
     if len(audio) >= target_length:
         return audio[:target_length]
+    # pad the end with silence (or whatever pad_value is set to)
     pad_width = target_length - len(audio)
     return np.pad(audio, (0, pad_width), constant_values=pad_value)
-
-
-def seconds_to_samples(seconds: float, sample_rate: int = DEFAULT_SAMPLE_RATE) -> int:
-    """Convert a duration in seconds to the equivalent number of samples."""
-    return int(round(seconds * sample_rate))
-
-
-def samples_to_seconds(samples: int, sample_rate: int = DEFAULT_SAMPLE_RATE) -> float:
-    """Convert a number of samples to the equivalent duration in seconds."""
-    return samples / sample_rate
