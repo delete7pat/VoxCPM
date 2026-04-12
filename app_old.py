@@ -46,13 +46,20 @@ class VoxCPMDemo:
 
         repo_id = os.environ.get("HF_REPO_ID", "").strip()
         if len(repo_id) > 0:
+            # replace '/' with '__' to avoid nested dirs - cleaner IMO
             target_dir = os.path.join("models", repo_id.replace("/", "__"))
             if not os.path.isdir(target_dir):
                 try:
                     from huggingface_hub import snapshot_download  # type: ignore
                     os.makedirs(target_dir, exist_ok=True)
                     print(f"Downloading model from HF repo '{repo_id}' to '{target_dir}' ...", file=sys.stderr)
-                    snapshot_download(repo_id=repo_id, local_dir=target_dir, local_dir_use_symlinks=False)
+                    # ignore_patterns: skip .git stuff and large unused files to save disk space
+                    snapshot_download(
+                        repo_id=repo_id,
+                        local_dir=target_dir,
+                        local_dir_use_symlinks=False,
+                        ignore_patterns=["*.msgpack", "*.h5", "flax_model*"],
+                    )
                 except Exception as e:
                     print(f"Warning: HF download failed: {e}. Falling back to 'data'.", file=sys.stderr)
                     return "models"
@@ -70,7 +77,4 @@ class VoxCPMDemo:
         return self.voxcpm_model
 
     # ---------- Functional endpoints ----------
-    def prompt_wav_recognition(self, prompt_wav: Optional[str]) -> str:
-        if prompt_wav is None:
-            return ""
-        res = s
+    def prompt_wav_recognition(self, p
