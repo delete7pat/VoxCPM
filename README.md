@@ -23,6 +23,11 @@
 <br>
 
 > **Personal fork note:** I'm using this project to learn about diffusion-based TTS architectures. Main upstream repo is at [OpenBMB/VoxCPM](https://github.com/OpenBMB/VoxCPM). Any changes here are just for my own experimentation.
+>
+> **My notes so far:**
+> - The diffusion autoregressive design is really interesting — worth reading `model/diffusion_ar.py` first to get oriented
+> - Voice cloning quality noticeably improves with reference clips longer than ~5 seconds in my tests
+> - TODO: experiment with different CFG guidance scales to see how it affects expressiveness vs. stability
 
 <p align="center">
   👋 Join our community for discussion and support!
@@ -43,5 +48,4 @@ VoxCPM is a **tokenizer-free** Text-to-Speech system that directly generates con
 ### ✨ Highlights
 
 - 🌍 **30-Language Multilingual** — Input text in any of the 30 supported languages and synthesize directly, no language tag needed
-- 🎨 **Voice Design** — Create a brand-new voice from a natural-language description alone (gender, age, tone, emotion, pace …), no reference audio required
-- 🎛️ **Controllable Cloning** — Clone any voice from a short reference clip, with optional style guidance to steer emotion, pace
+- 🎨 **Voice Design** — Create a brand-new voice from a natural-language 
