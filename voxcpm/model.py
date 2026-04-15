@@ -11,7 +11,7 @@ from voxcpm.utils import resolve_model_dir, validate_audio_file, normalize_audio
 
 
 DEFAULT_SAMPLE_RATE = 16000
-DEFAULT_MAX_AUDIO_LEN = 30  # seconds
+DEFAULT_MAX_AUDIO_LEN = 60  # seconds -- bumped from 30s, I kept hitting the limit with longer recordings
 
 
 class VoxCPM:
@@ -89,51 +89,4 @@ class VoxCPM:
         self,
         audio: Union[str, Path, np.ndarray],
         language: Optional[str] = None,
-        max_new_tokens: int = 256,
-    ) -> str:
-        """Transcribe speech from an audio file or raw waveform array.
-
-        Args:
-            audio: Path to an audio file or a float32 numpy array at
-                   ``DEFAULT_SAMPLE_RATE`` Hz.
-            language: Optional BCP-47 language code hint (e.g. 'zh', 'en').
-            max_new_tokens: Maximum number of tokens to generate.
-
-        Returns:
-            The transcribed text string.
-        """
-        if not self.is_loaded:
-            self.load()
-
-        # Accept file paths or raw arrays
-        if isinstance(audio, (str, Path)):
-            validate_audio_file(audio)
-            waveform = normalize_audio(audio, target_sr=DEFAULT_SAMPLE_RATE)
-        elif isinstance(audio, np.ndarray):
-            waveform = audio.astype(np.float32)
-        else:
-            raise TypeError(f"Unsupported audio type: {type(audio)}")
-
-        # Trim / pad to the maximum supported duration
-        max_samples = DEFAULT_SAMPLE_RATE * DEFAULT_MAX_AUDIO_LEN
-        waveform = pad_or_trim(waveform, max_samples)
-
-        # Build model inputs
-        inputs = self._processor(
-            waveform,
-            sampling_rate=DEFAULT_SAMPLE_RATE,
-            return_tensors="pt",
-        )
-        input_features = inputs.input_features.to(self.device, dtype=self.dtype)
-
-        generate_kwargs = {"max_new_tokens": max_new_tokens}
-        if language:
-            generate_kwargs["language"] = language
-
-        with torch.no_grad():
-            predicted_ids = self._model.generate(input_features, **generate_kwargs)
-
-        transcription = self._processor.batch_decode(
-            predicted_ids, skip_special_tokens=True
-        )[0]
-        return transcription.strip()
+        max_n
