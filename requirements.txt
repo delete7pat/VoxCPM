@@ -20,3 +20,6 @@ requests>=2.31.0
 
 # Optional: for faster inference
 # flash-attn>=2.3.0
+
+# Personal note: uncomment flash-attn above if running on A100/H100, makes a
+# noticeable difference. On my 3090 it caused issues so leaving it off.
