@@ -77,13 +77,14 @@ def normalize_audio(
 
     Args:
         audio: 1-D float32 numpy array.
-        target_peak: desired peak amplitude (0.0 – 1.0).
+        target_peak: desired peak amplitude (0.0 - 1.0).
 
     Returns:
         Normalized float32 numpy array.
     """
     peak = np.abs(audio).max()
     if peak < 1e-8:
+        # audio is essentially silent, nothing to normalize
         return audio.astype(np.float32)
     return (audio * (target_peak / peak)).astype(np.float32)
 
@@ -106,6 +107,6 @@ def pad_or_trim(
     """
     if len(audio) >= target_length:
         return audio[:target_length]
-    # pad at the end with pad_value
+    # pad with silence at the end
     pad_width = target_length - len(audio)
-    return np.pad(audio, (0, pad_width), mode="constant", constant_values=pad_value).astype(audio.dtype)
+    return np.pad(audio, (0, pad_width), constant_values=pad_value)
