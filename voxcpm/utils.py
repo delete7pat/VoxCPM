@@ -105,8 +105,7 @@ def pad_or_trim(
         Array of shape (target_length,).
     """
     if len(audio) >= target_length:
-        # trim from the end -- could also trim from center but this is simpler
         return audio[:target_length]
-    # pad with pad_value on the right (end of clip)
+    # pad at the end with pad_value
     pad_width = target_length - len(audio)
-    return np.pad(audio, (0, pad_width), mode="constant", constant_values=pad_value)
+    return np.pad(audio, (0, pad_width), mode="constant", constant_values=pad_value).astype(audio.dtype)
