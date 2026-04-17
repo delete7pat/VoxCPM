@@ -9,7 +9,7 @@ num_iters: 2000
 log_interval: 10
 valid_interval: 500  # check validation more frequently to catch overfitting early
 save_interval: 500  # save more often in case training crashes
-learning_rate: 0.00001 
+learning_rate: 0.000005  # lowered from 1e-5, was getting unstable loss spikes
 weight_decay: 0.01
 warmup_steps: 100
 max_steps: 2000
